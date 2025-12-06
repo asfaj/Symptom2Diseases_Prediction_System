@@ -1,0 +1,16 @@
+import joblib
+from sklearn.preprocessing import LabelEncoder
+
+diseases = ['Psoriasis', 'Varicose Veins', 'Typhoid', 'Chicken pox', 'Impetigo',
+            'Dengue', 'Fungal infection', 'Common Cold', 'Pneumonia', 'Dimorphic Hemorrhoids',
+            'Arthritis', 'Acne', 'Bronchial Asthma', 'Hypertension', 'Migraine',
+            'Cervical spondylosis', 'Jaundice', 'Malaria', 'Urinary tract infection', 'Allergy',
+            'Gastroesophageal reflux disease', 'Drug reaction', 'Peptic ulcer disease', 'Diabetes']
+
+le = LabelEncoder()
+le.fit(diseases)
+
+import os
+model_dir = "C:\\Users\\Asfa\\Documents\\Semester_8\\IDS\\Symptom2Diseases_Prediction_System\\Model_training_and_testing"
+joblib.dump(le, os.path.join(model_dir, 'label_encoder.pkl'))
+print("label_encoder.pkl created successfully!")

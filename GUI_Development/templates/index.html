@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom to Disease Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* -------- RESET & BASE -------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* -------- CONTAINER -------- */
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* -------- HEADER -------- */
+        .header {
+            background: linear-gradient(90deg, #00796b, #004d40);
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+        /* -------- CONTENT -------- */
+        .content {
+            padding: 35px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #004d40;
+            font-size: 1.05rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #b2dfdb;
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 140px;
+            background-color: #e0f2f1;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #00796b;
+            background-color: #ffffff;
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 121, 107, 0.3);
+        }
+
+        /* -------- BUTTON -------- */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #00796b, #004d40);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 121, 107, 0.4);
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #004d40, #00796b);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* -------- RESULT -------- */
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #e0f2f1;
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result h3 {
+            margin-bottom: 12px;
+            color: #004d40;
+            font-size: 1.2rem;
+        }
+
+        .disease {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #004d40;
+            padding: 12px 25px;
+            border-radius: 50px;
+            background-color: rgba(0, 77, 64, 0.15);
+            display: inline-block;
+        }
+
+        /* -------- LOADING SPINNER -------- */
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 5px solid #b2dfdb;
+            border-top: 5px solid #00796b;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* -------- ERROR -------- */
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            color: #b71c1c;
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 2px solid rgba(244, 67, 54, 0.3);
+            text-align: center;
+        }
+
+        /* -------- FOOTER -------- */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #004d40;
+            border-top: 1px solid #b2dfdb;
+            background-color: #e0f2f1;
+        }
+
+        /* -------- ANIMATIONS -------- */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* -------- RESPONSIVE -------- */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            .content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-stethoscope"></i> Symptom2Disease</h1>
+            <p>Predict disease from symptoms</p>
+        </div>
+
+        <div class="content">
+            <form id="symptom-form">
+                <div class="input-group">
+                    <label for="user_input"><i class="fas fa-notes-medical"></i> Enter Symptoms:</label>
+                    <textarea id="user_input" name="user_input" placeholder="e.g., fever, headache, nausea..."></textarea>
+                </div>
+
+                <button type="submit" class="btn" id="submit-btn">
+                    <i class="fas fa-diagnoses"></i> Predict Disease
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing symptoms...</p>
+            </div>
+
+            <div class="error" id="error"></div>
+
+            <div class="result" id="result">
+                <h3>Predicted Disease:</h3>
+                <div class="disease" id="disease-display"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Powered by Flask & SVM Model
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('symptom-form');
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            const diseaseDisplay = document.getElementById('disease-display');
+            const userInput = document.getElementById('user_input');
+            const submitBtn = document.getElementById('submit-btn');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const text = userInput.value.trim();
+                if (!text) {
+                    errorDiv.textContent = 'Please enter symptoms.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                resultDiv.style.display = 'none';
+                errorDiv.style.display = 'none';
+                loadingDiv.style.display = 'block';
+                submitBtn.disabled = true;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('user_input', text);
+
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('Server error');
+
+                    const data = await response.json();
+
+                    if (data.predicted_disease) {
+                        diseaseDisplay.textContent = data.predicted_disease;
+                        resultDiv.style.display = 'block';
+                    } else throw new Error('Invalid response format');
+
+                } catch (error) {
+                    errorDiv.textContent = 'Error predicting disease. Try again.';
+                    errorDiv.style.display = 'block';
+                } finally {
+                    loadingDiv.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
